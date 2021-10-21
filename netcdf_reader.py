@@ -7,14 +7,14 @@ Created on Wed Oct 13 22:37:52 2021
 
 import netCDF4
 import numpy as np
-atmo = netCDF4.Dataset('Modele GCM/EarthRotationRate/AIJ/ANN0940-0949.aijP211eoDOFP3Od_4daysg.nc')
-ocean=netCDF4.Dataset('Modele GCM/EarthRotationRate/OIJ/ANN0940-0949.oijP211eoDOFP3Od_4daysg.nc')
-oijl=netCDF4.Dataset('Modele GCM/EarthRotationRate/OIJL/ANN0940-0949.oijlP211eoDOFP3Od_4daysg.nc')
+atmo = netCDF4.Dataset('EarthRotationRate/AIJ/ANN0940-0949.aijP211eoDOFP3Od_4daysg.nc')
+ocean=netCDF4.Dataset('EarthRotationRate/OIJ/ANN0940-0949.oijP211eoDOFP3Od_4daysg.nc')
+oijl=netCDF4.Dataset('EarthRotationRate/OIJL/ANN0940-0949.oijlP211eoDOFP3Od_4daysg.nc')
 
 
-atmo256 = netCDF4.Dataset('Modele GCM/EarthRotationRate/AIJ/ANN0940-0949.aijP211eoDOFP3Od_4daysg.nc')
-ocean256=netCDF4.Dataset('Modele GCM/EarthRotationRate/OIJ/ANN0940-0949.oijP211eoDOFP3Od_4daysg.nc')
-oijl_256=netCDF4.Dataset('Modele GCM/EarthRotationRate/OIJL/ANN0750-0799.oijlP211eoDOFP3Od_256daysg.nc')
+atmo256 = netCDF4.Dataset('EarthRotationRate/AIJ/ANN0940-0949.aijP211eoDOFP3Od_4daysg.nc')
+ocean256=netCDF4.Dataset('EarthRotationRate/OIJ/ANN0940-0949.oijP211eoDOFP3Od_4daysg.nc')
+oijl_256=netCDF4.Dataset('EarthRotationRate/OIJL/ANN0750-0799.oijlP211eoDOFP3Od_256daysg.nc')
 atmo4_vars=atmo.variables
 keys=atmo4_vars.keys()
 #print(keys)
