@@ -11,10 +11,14 @@ import numpy as np
 import glob
 import re
 import os
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+
 Mmol = 28.97 #[g/mol] src: https://www.cs.mcgill.ca/~rwest/wikispeedia/wpcd/wp/e/Earth%2527s_atmosphere.htm
 
 C_d=1 # really doubtful!!!
 R = 8.31446261815324 #[J⋅K^−1⋅mol^−1]
+
 
 
 aij_list=glob.glob(r"EarthRotationRate/AIJ/*.nc")
@@ -28,6 +32,10 @@ oijl_1 = netCDF4.Dataset(list(filter(re.compile('_'+str(1)).search,oijl_list))[0
 atmo_vars_1=atmo_1.variables
 oc_vars_1=ocean_1.variables
 oijl_vars_1 = oijl_1.variables
+
+lons=atmo_vars_1['lon'][:]
+lats=atmo_vars_1['lat'][:]
+
 
 
 downward_v_1=oijl_vars_1['w'][:]
@@ -46,6 +54,15 @@ snow_cov_per_1=atmo_vars_1['snowicefr']
 ice_1=snow_cov_per_1[:]-land_1[:]
 ice_1[ice_1<0]=0
 icecov_fr_1=np.mean(ice_1)
+
+m = Basemap(projection='moll',lat_0=0,lon_0=0)
+m.drawcoastlines()
+lon, lat = np.meshgrid(lons, lats)
+xi, yi = m(lon, lat)
+
+cs = m.pcolor(xi,yi,np.squeeze(ice_1[:]))
+cbar = m.colorbar(cs, location='bottom', pad="10%",label="ice coverage [%]")
+
 
 
 upwell_arr=[1]
