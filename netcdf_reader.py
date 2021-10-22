@@ -55,14 +55,52 @@ ice_1=snow_cov_per_1[:]-land_1[:]
 ice_1[ice_1<0]=0
 icecov_fr_1=np.mean(ice_1)
 
+fig = plt.figure(600)
+
+ax = fig.add_subplot(141)
+
+ax.set_title("Ice coverage")
+m = Basemap(projection='moll',lat_0=0,lon_0=0)
+
+lon, lat = np.meshgrid(lons, lats)
+xi, yi = m(lon, lat)
+m.drawcoastlines()
+cs = m.pcolor(xi,yi,ice_1[:])
+cbar = m.colorbar(cs, location='bottom', pad="10%")
+
+
+ax = fig.add_subplot(142)
+ax.set_title("Upwelling")
 m = Basemap(projection='moll',lat_0=0,lon_0=0)
 m.drawcoastlines()
 lon, lat = np.meshgrid(lons, lats)
 xi, yi = m(lon, lat)
 
-cs = m.pcolor(xi,yi,np.squeeze(ice_1[:]))
-cbar = m.colorbar(cs, location='bottom', pad="10%",label="ice coverage [%]")
+cs = m.pcolor(xi,yi,np.squeeze(upwelling_1[:]))
+cbar = m.colorbar(cs, location='bottom', pad="10%")
 
+ax = fig.add_subplot(143)
+ax.set_title("Wind stress")
+m = Basemap(projection='moll',lat_0=0,lon_0=0)
+m.drawcoastlines()
+lon, lat = np.meshgrid(lons, lats)
+xi, yi = m(lon, lat)
+
+cs = m.pcolor(xi,yi,np.squeeze(tau_1[:]))
+cbar = m.colorbar(cs, location='bottom', pad="10%")
+
+ax = fig.add_subplot(144)
+ax.set_title("Mixing layer depth")
+m = Basemap(projection='moll',lat_0=0,lon_0=0)
+m.drawcoastlines()
+lon, lat = np.meshgrid(lons, lats)
+xi, yi = m(lon, lat)
+
+cs = m.pcolor(xi,yi,oc_vars_1['oij_mld'][:])
+cbar = m.colorbar(cs, location='bottom', pad="10%")
+
+
+plt.show()
 
 
 upwell_arr=[1]
