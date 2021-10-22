@@ -5,8 +5,49 @@ Created on Wed Oct 13 22:37:52 2021
 @author: starg
 """
 
+
 import netCDF4
 import numpy as np
+import glob
+import re
+import os
+Mmol = 28.97 #[g/mol] src: https://www.cs.mcgill.ca/~rwest/wikispeedia/wpcd/wp/e/Earth%2527s_atmosphere.htm
+
+C_d=1 # really doubtful!!!
+R = 8.31446261815324 #[J⋅K^−1⋅mol^−1]
+
+
+aij_list=glob.glob(r"EarthRotationRate/AIJ/*.nc")
+oij_list=glob.glob(r"EarthRotationRate/OIJ/*.nc")
+oijl_list=glob.glob(r"EarthRotationRate/OIJL/*.nc")
+
+#periods=list(filter(reg.search,aij_list)) 
+periods= [1,4,8,16,32,64,128,243,256]
+for p in periods:
+    reg=re.compile('_'+str(p)).search
+    print(p,list(filter(reg,aij_list))[0],list(filter(reg,oij_list))[0],list(filter(reg,oijl_list))[0])
+    atmo = netCDF4.Dataset(list(filter(reg,aij_list))[0])
+    ocean = netCDF4.Dataset(list(filter(reg,oij_list))[0])
+    oijl = netCDF4.Dataset(list(filter(reg,oijl_list))[0])
+    atmo_vars=atmo.variables
+    oc_vars=ocean.variables
+    oijl_vars = oijl.variables
+    lon=atmo_vars['lon']
+    lat=atmo_vars['lat']
+    wind_u=atmo_vars['usurf']
+    wind_v=atmo_vars['vsurf']
+    wind_vel=np.sqrt(np.power(wind_u[:],2)+np.power(wind_v[:],2))
+
+    swnow_cov_per=atmo_vars['snowicefr']
+    temp_surf=atmo_vars['tsurf']
+    p_surf=atmo_vars['prsurf']
+
+    
+
+    oc_mixl=oc_vars['oij_mld']
+    rho_surf = p_surf[:]/(temp_surf[:]*R/Mmol)
+    tau=C_d*rho_surf*np.power(wind_vel[:],2)
+'''
 atmo = netCDF4.Dataset('EarthRotationRate/AIJ/ANN0940-0949.aijP211eoDOFP3Od_4daysg.nc')
 ocean=netCDF4.Dataset('EarthRotationRate/OIJ/ANN0940-0949.oijP211eoDOFP3Od_4daysg.nc')
 oijl=netCDF4.Dataset('EarthRotationRate/OIJL/ANN0940-0949.oijlP211eoDOFP3Od_4daysg.nc')
@@ -18,7 +59,7 @@ oijl_256=netCDF4.Dataset('EarthRotationRate/OIJL/ANN0750-0799.oijlP211eoDOFP3Od_
 atmo4_vars=atmo.variables
 keys=atmo4_vars.keys()
 #print(keys)
-
+'''
 '''
 
 Hi Mike! 
@@ -44,18 +85,21 @@ An easier way to do this would be just to do an area-weighted sum of the upward 
 
 
 '''
-
+'''
 
 lon=atmo4_vars['lon']
 lat=atmo4_vars['lat']
 wind_u=atmo4_vars['usurf']
-wind_drag=1
 wind_v=atmo4_vars['vsurf']
-wind_vel=np.sqrt(np.power(wind_u,2)+np.power(wind_v,2))
+wind_vel=np.sqrt(np.power(wind_u[:],2)+np.power(wind_v[:],2))
+
 swnow_cov_per=atmo4_vars['snowicefr']
 temp_surf=atmo4_vars['tsurf']
 p_surf=atmo4_vars['prsurf']
-oc_vars=ocean.variables
-R = 8.31446261815324 #[J⋅K^−1⋅mol^−1]
+
+oc4_vars=ocean.variables
+
 oc_mixl=oc4_vars['oij_mld']
-rho_surf = p_surf/(temp_surf*R/Mmol)
+rho_surf = p_surf[:]/(temp_surf[:]*R/Mmol)
+tau=C_d*rho_surf*np.power(wind_vel[:],2)
+'''
