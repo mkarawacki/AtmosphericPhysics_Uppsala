@@ -235,6 +235,15 @@ snow_cov_per_365=atmo_vars_365['snowicefr']
 ice_365=snow_cov_per_365[:]-land_365[:]
 ice_365[ice_365<0]=0
 icecov_fr_365=np.mean(ice_365)
+icecov.append(icecov_fr_365)
+
+upwell_sum=np.sum(upwelling_365)/upwell_sum_1
+upwell_arr.append(upwell_sum)
+tau_arr.append(np.mean(tau_365)/np.mean(tau_1))
+oc_mixl=np.mean(oc_vars_365['oij_mld'][:])
+mld.append(oc_mixl)
+
+
 
 axs[col+1].annotate("P = {} d".format(str(365)),xy=(0, 0.5), xytext=(-axs[col+1].yaxis.labelpad-pad,0), xycoords=axs[col+1].yaxis.label, textcoords='offset points',size='large', ha='right', va='center')
 
@@ -311,6 +320,16 @@ ice_365_0[ice_365_0<0]=0
 icecov_fr_365_0=np.mean(ice_365_0)
 
 
+icecov.append(icecov_fr_365_0)
+
+upwell_sum=np.sum(upwelling_365_0)/upwell_sum_1
+upwell_arr.append(upwell_sum)
+tau_arr.append(np.mean(tau_365_0)/np.mean(tau_1))
+oc_mixl=np.mean(oc_vars_365_0['oij_mld'][:])
+mld.append(oc_mixl)
+
+
+
 axs[col+5].annotate("P = {} d, $\epsilon=0$".format(str(365)),xy=(0, 0.5), xytext=(-axs[col+5].yaxis.labelpad-pad,0), xycoords=axs[col+5].yaxis.label, textcoords='offset points',size='large', ha='right', va='center')
 
 m = Basemap(projection='moll',lat_0=0,lon_0=0,ax=axs[col+5])
@@ -352,7 +371,34 @@ cs = m.pcolor(xi,yi,oc_vars_365_0['oij_mld'][:],cmap='jet')
 cbar = m.colorbar(cs, location='bottom',size="5%", pad='2%')
 #plt.savefig("ParameterGlobalMaps.png",dpi=1200)    
 plt.show()
+
 '''
 mean values' scatterplots
 '''
 periods1=[1]+periods+[365]
+fig, axs = plt.subplots(2,2, figsize=(10,8))
+fig.subplots_adjust(hspace = .5, wspace=.25)
+axs[0,0].plot(periods1,upwell_arr[:-1],c='mediumseagreen',marker='o',linestyle='dashed',linewidth=1, markersize=8)
+axs[0,0].set_title("Mean upwelling")
+axs[0,0].set_xlabel("Rotation Period [d]")
+
+
+
+axs[0,1].plot(periods1,icecov[:-1],c='grey',marker='o',linestyle='dashed',linewidth=1, markersize=8)
+axs[0,1].set_title("Mean ice coverage")
+axs[0,1].set_xlabel("Rotation Period [d]")
+axs[0,1].set_ylabel("Ice coverage $[\%]$")
+
+
+
+axs[1,0].plot(periods1,tau_arr[:-1],c='aqua',marker='o',linestyle='dashed',linewidth=1, markersize=8)
+axs[1,0].set_title("Mean wind stress")
+axs[1,0].set_xlabel("Rotation Period [d]")
+axs[1,0].set_ylabel(r"$\tau [g m^{-1} s^{-2}]$")
+
+
+axs[1,1].plot(periods1,mld[:-1],c='navy',marker='o',linestyle='dashed',linewidth=1, markersize=8)
+axs[1,1].set_title("Mean mixing layer depth")
+axs[1,1].set_xlabel("Rotation Period [d]")
+axs[1,1].set_ylabel("Mixing layer depth [m]")
+plt.show()
